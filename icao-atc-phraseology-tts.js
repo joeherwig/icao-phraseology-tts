@@ -38,7 +38,6 @@
         margin: 1em 0 1em 1em;
         font-family: monospace;
         font-size: 1rem;
-        
         user-select: none;
       }
 
@@ -78,7 +77,6 @@
       </div>
     </details>
     <slot>to make use of this TTS element, just add child elements of classes either 'atc' or 'acft' within this tag.</slot></div>`;
-
   class icaoAtcPhraseologyTts extends HTMLElement {
 
     /**
@@ -205,9 +203,9 @@
               // thousands
               transcription += left(sanitizedWord, 1) + getOperatorPhonetics("thousand") + " ";
               break;
-            case /^([A-Z]{3,6})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
+            case /^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
               // SID
-              let match = sanitizedWord.match(/^([A-Z]{3,6})([0-9]{1}[A-Z]{1})$/)
+              let match = sanitizedWord.match(/^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/)
               console.log("\t\found SID " + sanitizedWord);
               transcription += match[1] + getAbbreviationPhonetics(match[2] ) + " ";
               break;
