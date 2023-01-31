@@ -1,6 +1,8 @@
 # icao-phraseology-tts
 is a self contained webcomponent to "speak" aeronautical radio transmissions on a web page.
 
+I used it to build an easy to write ICAO phraseology training page.
+
 ## Example
 
 ## Useage
