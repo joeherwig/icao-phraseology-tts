@@ -69,7 +69,7 @@
         </div>
         <div>
           <label for="yourCallsign">choose your callsign</label>
-          <input id="yourCallsign" type="text" value="DLH22G">
+          <input id="yourCallsign" type="text" value="`+localStorage.getItem("callsign")+`">
           <p>Die Liste realistischer Callsigns findet ihr unter <a href="https://www.avcodes.co.uk/airlcodesearch.asp" target="airlinecodes">https://www.avcodes.co.uk/airlcodesearch.asp</a>
             <div id="errorText"></div>
           </p>
@@ -103,13 +103,12 @@
       isSpeaking = true;
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
-      let atcVoice = 0;
-      let acftVoice = 1;
+      let atcVoice = localStorage.getItem("atcVoice") !== (null && '') ? localStorage.getItem("atcVoice") : 0;
+      let acftVoice = localStorage.getItem("acftVoice") !== (null && '') ? localStorage.getItem("acftVoice") : 1;
 
       
       function replaceCallsign () {
-        let callsign = urlParams.get('callsign')
-        callsign = urlParams.get('callsign') !== (null && "") ? urlParams.get('callsign') : "DLH22G";
+        let callsign = localStorage.getItem("callsign") !== (null && '') ? localStorage.getItem("callsign") : "DLH22G";
         callsign = callsignSelect.value !== '' ? callsignSelect.value : callsign;
         console.log("-----\ncallsign\t"+callsign+"\ncurrentCallsign\t"+currentCallsign);
         if (callsign.match(/^([A-Za-z]{1,3}([A-Za-z0-9]{1,6}))$/)) {
@@ -128,7 +127,6 @@
               else if(node.nodeType == Node.TEXT_NODE) 
               result.push(node);
             })(document);
-            
             return result;
           }
           
@@ -136,11 +134,10 @@
             return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
           }
           currentCallsign = callsign.toUpperCase();
-          //this.shadowRoot.querySelector("#errorText").innerHTML = "";
+          localStorage.setItem("callsign", currentCallsign) ;
 
         } else {
           let errorText = "Dein callsign '"+callsign.toUpperCase()+"' ist noch nicht ICAO konform.<br>Bitte wähle eines das mit drei Buchstaben für die Airline beginnt, und dann 1-4 weitere Buchstaben oder Ziffern hat.<br>Solange verwenden wir im Text weiterhin " + currentCallsign + ".";
-          //this.shadowRoot.querySelector("#errorText").innerHTML = errorText;
         }
       }
 
@@ -275,6 +272,7 @@
 
       // ----- replace callsign
       window.onload = function init() {
+
         function getAvailableVoices () {
           voices = window.speechSynthesis.getVoices();
           speechSynthesis.getVoices().forEach((voice, i) => {
@@ -291,7 +289,8 @@
           });
 
           if (voices.length > 0) {
-            console.log("voices found")
+            acftVoiceSelect.value = acftVoice;
+            atcVoiceSelect.value = atcVoice;
           } else {
             ttsInfo.innerHTML = "Leider konnten auf deinem System keine Text-to-speech Stimmen gefunden werden. Wenn Du welche verfügbar gemacht hast, kannst Du durch tap/klick auf die Flugfunktexte den Text als Sprachausgabe anhören.<br>Stelle dann bitte auch sicher, dass die Audioausgabe von Websites auch zu hören ist.";
           }
@@ -319,13 +318,14 @@
         getAvailableVoices();
         atcVoiceSelect.addEventListener("change", () => {
           atcVoice = atcVoiceSelect.value;
+          localStorage.setItem("atcVoice", atcVoice)
           addTts();
         });
         acftVoiceSelect.addEventListener("change", () => {
           acftVoice = acftVoiceSelect.value;
+          localStorage.setItem("acftVoice", acftVoice)
           addTts();
         });
-        
       }
     }
 
