@@ -146,7 +146,7 @@
 
 
       function getCharPhonetics (char) {
-        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","9":"niner","°":"degrees","3":"tri"};
+        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","9":"niner","°":"degrees","2":"two","3":"tri"};
         let speak = natoAlphabet[char.toUpperCase()] ? natoAlphabet[char] : char;
         return speak + " ";
       }
@@ -189,12 +189,19 @@
         let transcription = "";
         let operator =""
         const splitAt = (index, xs) => [xs.slice(0, index), xs.slice(index)]
-        console.log("\n"+readableText);
         let words = readableText.split(" ");
 
         words.forEach(word => {
-          sanitizedWord = word.replace(/[^a-z0-9\u00C0-\u017F]/gi, '');
+          sanitizedWord = word.replace(/[^a-z0-9\u00C0-\u017F\u002D]/gi, '');
           switch (true) {
+            case /^(deicing||de-icing)$/.test(sanitizedWord):
+              // Taxi routes 
+              transcription += " dee icing";
+              break;
+            case /^([A-Z]{1}([1-9]{0,1}))$/.test(sanitizedWord):
+              // Taxi routes 
+              transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
+              break;
             case /^([1-9]{1}([0]{2}))$/.test(sanitizedWord):
               // hundreds 
               transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
@@ -206,7 +213,6 @@
             case /^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
               // SID
               let match = sanitizedWord.match(/^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/)
-              console.log("\t\found SID " + sanitizedWord);
               transcription += match[1] + getAbbreviationPhonetics(match[2] ) + " ";
               break;
             case /^(([A-Z]{3})([1-9]{1,5}[0-9]{0,5}[A-Z]{0,1}))|([A-Z]{1}[1-9]{4,5})|([A-Z]{5})$/.test(sanitizedWord): 
@@ -229,7 +235,6 @@
               break;
             case /^(([A-Z]{0,1}([0-9]{1,4}))|([A-Z0-9]{1})|([0-9]{2,3}))$/.test(sanitizedWord): 
               // Parking Positions / Runways etc. to spell
-              console.log("\t-prk--\t "+word);
               transcription += getAbbreviationPhonetics(word) + " ";
               break;
             case /^(([0-9]{3}.[0-9]{1,3}))$/.test(sanitizedWord): 
@@ -242,14 +247,12 @@
               // Flight Levels (FL__)
               let flightLevelMarker = splitAt(2, sanitizedWord)[0];
               let flightLevel = splitAt(2, sanitizedWord)[1];
-              console.log("\t---\t "+word);
               transcription += "flight level " + getAbbreviationPhonetics(flightLevel);
               break;
             case /^([1-9]{1})([0]{1,3})(ft|FT)$/.test(sanitizedWord): 
               // Altitude (__ft)              
               let altMatch = sanitizedWord.match(/^([0-9]{1})([0]{1,3})(ft|FT)$/)
               let Altitude = altMatch[2] === "000" ? altMatch[1] + "tausand" : altMatch[1] +altMatch[2]; 
-              console.log(Altitude)
               //transcription += altMatch[1] + getAbbreviationPhonetics(altMatch[2] ) + " ";
               transcription += Altitude + " feet ";
               break;
