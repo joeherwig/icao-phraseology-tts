@@ -1,0 +1,184 @@
+doctype html
+head
+  meta(name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no')
+  meta(charset='utf-8')
+  script(type='text/javascript' src='../icao-atc-phraseology-tts.js')
+  style.
+  
+    joeherwig-atc-phraseology-tts {
+      width: 100%;
+    }
+    code {
+      background: #9999995a;
+      padding: 0.25em;
+    }
+    div > code {
+      display: block;
+      overflow: auto;
+      counter-reset: line;
+      white-space: pre;
+    }
+    div > code p{
+      counter-increment: line;
+      margin: 0px;
+      color: grey;
+    }
+    div > code p:before{
+      content: counter(line);
+      margin: 0 1em 0 1em;
+      color: grey;
+    }
+    div > code p.focus {
+      color: black;
+    }
+
+    .caution {
+      background: #ffa5005e;
+      border: 0px solid transparent;
+      border-left: 3px solid #666666;
+      font-style: italic;
+      color: #333333;
+      page-break-inside: avoid;
+      text-align: left;
+      margin-bottom: 1.6em;
+      max-width: 100%;
+      overflow: auto;
+      padding: 1em 1.5em;
+      display: block;
+      word-wrap: break-word;
+    }
+
+    .caution::before {
+      content: "⚠️";
+      font-style: normal;
+      margin-right: 0.5em;
+      display: block;
+      float: left;
+      font-size: 2em;
+    }
+body
+  h1 Include it 
+  by simply adding the js file in your website like 
+
+  div 
+    code
+      | &lt;!DOCTYPE html&gt;
+      | &lt;html&gt;
+      |   &lt;head&gt;
+      |    ...
+      |
+      b
+        |     &lt;script type="text/javascript" src="https://gitlab.com/joeherwig/joeherwig-webcomponents/-/raw/master/webcomponents/joeherwig-flightboard.js"&gt;&lt;/script&gt;
+  p in your webpage..
+  p Then use it where you want to add your ICAO content like that:
+  div
+    code
+      |   ...
+      |   &lt;body&gt;
+      |     ...
+      b
+        |   &lt;joeherwig-atc-phraseology&gt;
+        |     ...
+        |     &lt;div class="acft"&gt;Stuttgart Delivery, DLH22G, Position 12, Information K, request Startup and clearance to Zürich.&lt;/div&gt;
+        |     &lt;div class="atc"&gt;DLH22G, good morning, say again your Position.&lt;/div&gt;
+        |     ...
+        |     &lt;div class="acft"&gt;DLH22G, we're on Position 12.&lt;/div&gt;
+        |     &lt;div class="atc"&gt;DLH22G, cleared to Munich via Rotweil 5B Departure. Climb Altitude 5000ft.&lt;/div&gt;
+        |   &lt;/joeherwig-atc-phraseology&gt;
+        |
+      |     ...
+      |     
+  p of course you can also structure your aeronautical radio documentation with headlines, paragraphs, lists, figures and images etc.
+  p we just work with divs of classes 
+    code atc
+    |  and 
+    code acft
+    | .
+
+  h1 Example
+  icao-atc-phraseology-tts
+    h2 First example
+    .acft Stuttgart Delivery, DLH22G, Position 12, Information K, request Startup and clearance to Zürich.
+    .atc DLH22G, good morning, say again your Position.
+    .acft DLH22G, we're on Position 12.
+    .atc DLH22G, cleared to Munich via Rotweil 5B Departure. Climb Altitude 5000ft.
+    p no other text in here 
+    ul 
+      li Some list element 
+      li and an other list element.
+    .caution 
+      h2 Spelling hints 
+      h3 Callsigns
+      p For a couple of airlines we're able to map the callsign to the telephony designator. 
+        br
+        | Per default we're trying to recognize the callsign by starting with the ICAO three letter airline designator and followed by one till four alphanumeric digits.
+        br
+        | As ICAO only offers an paid API I decided to include a list of ICAO Airline designators and mapped them to telephony designators.
+        details 
+          summary Airline codes 
+            sup 
+              a(href="https://www.avcodes.co.uk/airlcodesearch.asp" target="airlineCodes") *
+          pre.
+              "AAL": "American"
+              "AEE": "Aegean"
+              "AFR": "Air France"
+              "ANA": "All Nippon"
+              "AUA": "Austrian"
+              "BAW": "Speedbird"
+              "BEL": "Beeline"
+              "BER": "Air Berlin"
+              "CFG": "Condor"
+              "CPA": "Cathay"
+              "CSN": "China Southern"
+              "DAL": "Delta"
+              "DLH": "Lufthansa"
+              "ETD": "Etihad"
+              "EWG": "Eurowings"
+              "EZY": "Easy"
+              "FSC": "Four Star"
+              "GAF": "German Air Force"
+              "IBE": "Iberia"
+              "ITY": "Itarrow"
+              "KLM": "K L M"
+              "LXP": "Lanes"
+              "MAF": "Missi"
+              "NAX": "Nor Shuttle"
+              "NJU": "ExecJet"
+              "OAL": "Olympic"
+              "QFA": "Quantas"
+              "QTR": "Qatari"
+              "RYR": "Ryanair"
+              "SAA": "Springbok"
+              "SWA": "Southwest"
+              "SWR": "Swiss"
+              "TAM": "T A M"
+              "TAP": "Air Portugal"
+              "THY": "Turkish"
+              "UAE": "Emirates"
+              "UAL": "United"
+              "VLG": "Vueling"
+              "VOI": "Volaris"
+              "WZZ": "Wizz Air"
+      h3 Altitudes 
+      p should be noted in the form of 
+        code 5000ft
+        | .
+      h3 Flight levels 
+      p should be noted in the form of 
+        code FL320
+        | .
+      h2 Caution
+      p Sometimes it's hard to recognize the correct spelling. For instance for 
+    .acft DLH22G requesting climb FL340. 
+    .atc DLH22G negative, Climb FL320.
+    .atc DLH22G cleared to Munich, DOMEG2T departure, climb altitude 5000ft.
+    .atc DLH22G cleared to Munich, Etasa 4B departure, climb altitude 5000ft.
+    .atc DLH22G cleared to Frankfurt, Kennedy 5 departure, climb altitude 5000ft.
+    .atc DLH22G cleared to Boston, Deezz5 departure, climb altitude 5000ft.
+    .atc 50ft.
+    .atc 600ft 
+    .atc 4000ft.
+  h2 All known Users
+  p in Volanta, VATSIM, IVAO, PilotEdge,
+  code &lt;joeherwig-flight-board networkUserName='FSC'&gt;&lt;/joeherwig-flight-board&gt;
+  joeherwig-flight-board
