@@ -5,7 +5,7 @@ is a self contained webcomponent to "speak" aeronautical radio transmissions on 
 
 ## Useage
 ### design time
-Include it by simply [downloading](https://raw.githubusercontent.com/joeherwig/icao-phraseology-tts/main/icao-phraseology-tts.js) and adding the js file in your website like
+Include it by simply [downloading](https://raw.githubusercontent.com/joeherwig/icao-phraseology-tts/main/icao-atc-phraseology-tts.js) and adding the js file in your website like
 
       <!DOCTYPE html>
       <html>
