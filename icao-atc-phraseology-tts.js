@@ -42,30 +42,6 @@
         user-select: none;
       }
 
-      .caution {
-        background: #ffa5005e;
-        border: 0px solid transparent;
-        border-left: 3px solid #666666;
-        font-style: italic;
-        color: #333333;
-        page-break-inside: avoid;
-        text-align: left;
-        margin-bottom: 1.6em;
-        max-width: 100%;
-        overflow: auto;
-        padding: 1em 1.5em;
-        display: block;
-        word-wrap: break-word;
-      }
-
-      .caution::before {
-        content: "⚠️";
-        font-style: normal;
-        margin-right: 0.5em;
-        display: block;
-        float: left;
-        font-size: 2em;
-      }
       #ttsSettings > div{
         margin-top: 1em;
       }
@@ -101,7 +77,7 @@
         </div>        
       </div>
     </details>
-    <slot>NEED NAME</slot></div>`;
+    <slot>to make use of this TTS element, just add child elements of classes either 'atc' or 'acft' within this tag.</slot></div>`;
 
   class icaoAtcPhraseologyTts extends HTMLElement {
 
