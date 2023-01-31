@@ -202,11 +202,11 @@
               break;
             case /^([1-9]{1}([0]{2}))$/.test(sanitizedWord):
               // hundreds 
-              transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
+              transcription += getAbbreviationPhonetics(left(sanitizedWord, 1)) + " " + getOperatorPhonetics("hundred") + " ";
               break;
             case /^([1-9]{1}([0]{3}))$/.test(sanitizedWord):
               // thousands
-              transcription += left(sanitizedWord, 1) + getOperatorPhonetics("thousand") + " ";
+              transcription += getAbbreviationPhonetics(left(sanitizedWord, 1)) +" "+ getOperatorPhonetics("thousand") + " ";
               break;
             case /^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
               // SID
@@ -250,7 +250,7 @@
             case /^([1-9]{1})([0]{1,3})(ft|FT)$/.test(sanitizedWord): 
               // Altitude (__ft)              
               let altMatch = sanitizedWord.match(/^([0-9]{1})([0]{1,3})(ft|FT)$/)
-              let Altitude = altMatch[2] === "000" ? altMatch[1] + "tausand" : altMatch[1] +altMatch[2]; 
+              let Altitude = altMatch[2] === "000" ?  getAbbreviationPhonetics(altMatch[1]) + "tausand" : altMatch[1] + altMatch[2]; 
               //transcription += altMatch[1] + getAbbreviationPhonetics(altMatch[2] ) + " ";
               transcription += Altitude + " feet ";
               break;
