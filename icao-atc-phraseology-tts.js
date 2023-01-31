@@ -105,11 +105,12 @@
       const urlParams = new URLSearchParams(queryString);
       let atcVoice = localStorage.getItem("atcVoice") !== (null && '') ? localStorage.getItem("atcVoice") : 0;
       let acftVoice = localStorage.getItem("acftVoice") !== (null && '') ? localStorage.getItem("acftVoice") : 1;
+      let callsign = localStorage.getItem("callsign") !== (null || '') ? localStorage.getItem("callsign") : "DLH22G";
+      callsignSelect.value = callsign;
 
       
       function replaceCallsign () {
-        let callsign = localStorage.getItem("callsign") !== (null && '') ? localStorage.getItem("callsign") : "DLH22G";
-        callsign = callsignSelect.value !== '' ? callsignSelect.value : callsign;
+        callsign = callsignSelect.value !== (null && '') ? callsignSelect.value : callsign;
         console.log("-----\ncallsign\t"+callsign+"\ncurrentCallsign\t"+currentCallsign);
         if (callsign.match(/^([A-Za-z]{1,3}([A-Za-z0-9]{1,6}))$/)) {
           
