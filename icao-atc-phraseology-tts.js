@@ -198,10 +198,6 @@
               // Taxi routes 
               transcription += " dee icing ";
               break;
-            case /^([A-Z]{1}([1-9]{0,1}))$/.test(sanitizedWord):
-              // Taxi routes 
-              transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
-              break;
             case /^([1-9]{1}([0]{2}))$/.test(sanitizedWord):
               // hundreds 
               transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
@@ -318,12 +314,10 @@
         window.speechSynthesis.onvoiceschanged = () => getAvailableVoices();
         getAvailableVoices();
         atcVoiceSelect.addEventListener("change", () => {
-          console.log(atcVoiceSelect.value);
           atcVoice = atcVoiceSelect.value;
           addTts();
         });
         acftVoiceSelect.addEventListener("change", () => {
-          console.log(acftVoiceSelect.value);
           acftVoice = acftVoiceSelect.value;
           addTts();
         });
