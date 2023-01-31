@@ -146,7 +146,7 @@
 
 
       function getCharPhonetics (char) {
-        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","9":"niner","°":"degrees","2":"two","3":"trih"};
+        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","9":"niner","°":"degrees","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight"};
         let speak = natoAlphabet[char.toUpperCase()] ? natoAlphabet[char] : char;
         return speak + " ";
       }
@@ -192,8 +192,12 @@
         let words = readableText.split(" ");
 
         words.forEach(word => {
-          sanitizedWord = word.replace(/[^a-z0-9\u00C0-\u017F\u002D]/gi, '');
+          sanitizedWord = word.replace(/[^a-z0-9\u00C0-\u017F\u002D\/]/gi, '');
           switch (true) {
+            case /^(\/\/)$/.test(sanitizedWord):
+              // Taxi routes 
+              transcription += "holding point ";
+              break;
             case /^(deicing||de-icing)$/.test(sanitizedWord):
               // Taxi routes 
               transcription += " dee icing ";
