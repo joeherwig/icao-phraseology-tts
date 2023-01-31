@@ -146,7 +146,7 @@
 
 
       function getCharPhonetics (char) {
-        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","9":"niner","°":"degrees","2":"two","3":"tri"};
+        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","9":"niner","°":"degrees","2":"two","3":"trii"};
         let speak = natoAlphabet[char.toUpperCase()] ? natoAlphabet[char] : char;
         return speak + " ";
       }
@@ -196,7 +196,7 @@
           switch (true) {
             case /^(deicing||de-icing)$/.test(sanitizedWord):
               // Taxi routes 
-              transcription += " dee icing";
+              transcription += " dee icing ";
               break;
             case /^([A-Z]{1}([1-9]{0,1}))$/.test(sanitizedWord):
               // Taxi routes 
