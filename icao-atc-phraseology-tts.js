@@ -41,6 +41,21 @@
         user-select: none;
       }
 
+      label {
+        display: inline-block;
+        width: 150px;
+      }
+      select, input {
+        background: inherit;
+        color: inherit;
+        border: solid 1px #666666 
+      }
+
+      details[open] {
+        background: #eeeeee;
+        padding: 0.5em;
+      }
+
       #ttsSettings > div{
         margin-top: 1em;
       }
@@ -53,12 +68,21 @@
       #yourCallsign {
         width: 10ch;
       }
+      @media (prefers-color-scheme: dark){
+        details[open] {
+          background: #222222;
+        }
+        
+        option, input {
+          background: #222222;
+        }
+      }
     </style>`
 
     template.innerHTML = styles + `
     <details>
       <summary>⚠️ voices &amp; callsign</summary>
-      <div class="ttsInfo" id="ttsSettings">
+      <div id="ttsSettings">
         <div>
           <label for="acftVoiceSelect">Aircraft voice</label>
           <select id="acftVoiceSelect"></select>
@@ -69,7 +93,7 @@
         </div>
         <div>
           <label for="yourCallsign">choose your callsign</label>
-          <input id="yourCallsign" type="text" value="DLH22G">
+          <input id="yourCallsign" type="text" value="`+localStorage.getItem("callsign")+`">
           <p>Die Liste realistischer Callsigns findet ihr unter <a href="https://www.avcodes.co.uk/airlcodesearch.asp" target="airlinecodes">https://www.avcodes.co.uk/airlcodesearch.asp</a>
             <div id="errorText"></div>
           </p>
@@ -92,7 +116,7 @@
       let voices = [];
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.appendChild(template.content.cloneNode(true));
-      let ttsInfo = this.shadowRoot.querySelector("#ttsInfo");
+      let ttsSettings = this.shadowRoot.querySelector("#ttsSettings");
       let atcVoiceSelect = this.shadowRoot.querySelector("#atcVoiceSelect");
       let acftVoiceSelect = this.shadowRoot.querySelector("#acftVoiceSelect");
       let callsignSelect = this.shadowRoot.querySelector("#yourCallsign");
@@ -103,8 +127,10 @@
       isSpeaking = true;
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
-      let atcVoice = 0;
-      let acftVoice = 1;
+      let atcVoice = localStorage.getItem("atcVoice") !== (null && '') ? localStorage.getItem("atcVoice") : 0;
+      let acftVoice = localStorage.getItem("acftVoice") !== (null && '') ? localStorage.getItem("acftVoice") : 1;
+      let callsign = localStorage.getItem("callsign") !== (null || '') ? localStorage.getItem("callsign") : "DLH22G";
+      callsignSelect.value = callsign;
 
       
       function replaceCallsign () {
@@ -136,7 +162,7 @@
             return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
           }
           currentCallsign = callsign.toUpperCase();
-          //this.shadowRoot.querySelector("#errorText").innerHTML = "";
+          localStorage.setItem("callsign", currentCallsign) ;
 
         } else {
           let errorText = "Dein callsign '"+callsign.toUpperCase()+"' ist noch nicht ICAO konform.<br>Bitte wähle eines das mit drei Buchstaben für die Airline beginnt, und dann 1-4 weitere Buchstaben oder Ziffern hat.<br>Solange verwenden wir im Text weiterhin " + currentCallsign + ".";
@@ -181,7 +207,7 @@
         msg.volume = 1; // From 0 to 1
         msg.rate = speechSpeed; // From 0.1 to 10
         msg.pitch = 1; // From 0 to 2
-        msg.lang = "en";
+        msg.lang = msg.voice.lang;
         window.speechSynthesis.speak(msg);
       }
       // ---- tts
@@ -272,43 +298,42 @@
         speak(transcription, selectedSpeaker, speechSpeed ? speechSpeed : 1);
         return transcription;
       }
+      function getAvailableVoices () {
+        voices = window.speechSynthesis.getVoices();
+        urlParams.get('debug') == 1 ? alert(voices.length + " voices found") : console.log(voices.length + " voices found");
+        if (voices.length > 0) {
+          speechSynthesis.getVoices().forEach((voice, i) => {
+            let atcOption = document.createElement("option");
+            let acftOption = document.createElement("option");
+            atcOption.text  = voice.name;
+            acftOption.text  = voice.name;
+            atcOption.value = i;
+            acftOption.value = i;
+            atcVoiceSelect.add(atcOption, atcVoiceSelect[i]);
+            acftVoiceSelect.add(acftOption, acftVoiceSelect[i]);
+          });
+          atcVoiceSelect.value = atcVoice;
+          acftVoiceSelect.value = acftVoice;
+        } else {
+          //ttsSettings.innerHTML = "Leider konnten auf deinem System keine Text-to-speech Stimmen gefunden werden. Wenn Du welche verfügbar gemacht hast, kannst Du durch tap/klick auf die Flugfunktexte den Text als Sprachausgabe anhören.<br>Stelle dann bitte auch sicher, dass die Audioausgabe von Websites auch zu hören ist.";
+        }
+      }
+
+      function addTts () {
+        document.querySelectorAll('.atc').forEach(transmition => {
+          transmition.addEventListener("click", (event) => {
+            readable2Tts(event.target.innerText, atcVoice, 1.25);
+          });
+        });
+        document.querySelectorAll('.acft').forEach(transmition => {
+          transmition.addEventListener("click", (event) => {
+            readable2Tts(event.target.innerText, acftVoice, 1.2);
+          });
+        });
+      }
 
       // ----- replace callsign
       window.onload = function init() {
-        function getAvailableVoices () {
-          voices = window.speechSynthesis.getVoices();
-          speechSynthesis.getVoices().forEach((voice, i) => {
-            let option = document.createElement("option");
-            option.text  = voice.name;
-            option.value = i;
-            atcVoiceSelect.add(option, atcVoiceSelect[i]);
-          });
-          speechSynthesis.getVoices().forEach((voice, i) => {
-            let option = document.createElement("option");
-            option.text  = voice.name;
-            option.value = i;
-            acftVoiceSelect.add(option, acftVoiceSelect[i]);
-          });
-
-          if (voices.length > 0) {
-            console.log("voices found")
-          } else {
-            ttsInfo.innerHTML = "Leider konnten auf deinem System keine Text-to-speech Stimmen gefunden werden. Wenn Du welche verfügbar gemacht hast, kannst Du durch tap/klick auf die Flugfunktexte den Text als Sprachausgabe anhören.<br>Stelle dann bitte auch sicher, dass die Audioausgabe von Websites auch zu hören ist.";
-          }
-        }
-
-        function addTts () {
-          document.querySelectorAll('.atc').forEach(transmition => {
-            transmition.addEventListener("click", (event) => {
-              readable2Tts(event.target.innerText, atcVoice, 1.25);
-            });
-          });
-          document.querySelectorAll('.acft').forEach(transmition => {
-            transmition.addEventListener("click", (event) => {
-              readable2Tts(event.target.innerText, acftVoice, 1.2);
-            });
-          });
-        }
         replaceCallsign();
         addTts();
         callsignSelect.addEventListener("keyup", (event) => {
@@ -316,16 +341,16 @@
         });
         getAvailableVoices();
         window.speechSynthesis.onvoiceschanged = () => getAvailableVoices();
-        getAvailableVoices();
         atcVoiceSelect.addEventListener("change", () => {
           atcVoice = atcVoiceSelect.value;
+          localStorage.setItem("atcVoice", atcVoice)
           addTts();
         });
         acftVoiceSelect.addEventListener("change", () => {
           acftVoice = acftVoiceSelect.value;
+          localStorage.setItem("acftVoice", acftVoice)
           addTts();
-        });
-        
+        });        
       }
     }
 
