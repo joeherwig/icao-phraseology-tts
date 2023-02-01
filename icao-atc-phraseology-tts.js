@@ -134,9 +134,7 @@
 
       
       function replaceCallsign () {
-        let callsign = urlParams.get('callsign')
-        callsign = urlParams.get('callsign') !== (null && "") ? urlParams.get('callsign') : "DLH22G";
-        callsign = callsignSelect.value !== '' ? callsignSelect.value : callsign;
+        callsign = callsignSelect.value !== (null && '') ? callsignSelect.value : callsign;
         console.log("-----\ncallsign\t"+callsign+"\ncurrentCallsign\t"+currentCallsign);
         if (callsign.match(/^([A-Za-z]{1,3}([A-Za-z0-9]{1,6}))$/)) {
           
@@ -154,7 +152,6 @@
               else if(node.nodeType == Node.TEXT_NODE) 
               result.push(node);
             })(document);
-            
             return result;
           }
           
@@ -166,7 +163,6 @@
 
         } else {
           let errorText = "Dein callsign '"+callsign.toUpperCase()+"' ist noch nicht ICAO konform.<br>Bitte wähle eines das mit drei Buchstaben für die Airline beginnt, und dann 1-4 weitere Buchstaben oder Ziffern hat.<br>Solange verwenden wir im Text weiterhin " + currentCallsign + ".";
-          //this.shadowRoot.querySelector("#errorText").innerHTML = errorText;
         }
       }
 
@@ -230,11 +226,11 @@
               break;
             case /^([1-9]{1}([0]{2}))$/.test(sanitizedWord):
               // hundreds 
-              transcription += getAbbreviationPhonetics(sanitizedWord) + " ";
+              transcription += getAbbreviationPhonetics(left(sanitizedWord, 1)) + " " + getOperatorPhonetics("hundred") + " ";
               break;
             case /^([1-9]{1}([0]{3}))$/.test(sanitizedWord):
               // thousands
-              transcription += left(sanitizedWord, 1) + getOperatorPhonetics("thousand") + " ";
+              transcription += getAbbreviationPhonetics(left(sanitizedWord, 1)) +" "+ getOperatorPhonetics("thousand") + " ";
               break;
             case /^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
               // SID
@@ -278,7 +274,7 @@
             case /^([1-9]{1})([0]{1,3})(ft|FT)$/.test(sanitizedWord): 
               // Altitude (__ft)              
               let altMatch = sanitizedWord.match(/^([0-9]{1})([0]{1,3})(ft|FT)$/)
-              let Altitude = altMatch[2] === "000" ? altMatch[1] + "tausand" : altMatch[1] +altMatch[2]; 
+              let Altitude = altMatch[2] === "000" ?  getAbbreviationPhonetics(altMatch[1]) + "tausand" : altMatch[1] + altMatch[2]; 
               //transcription += altMatch[1] + getAbbreviationPhonetics(altMatch[2] ) + " ";
               transcription += Altitude + " feet ";
               break;
@@ -350,7 +346,8 @@
           acftVoice = acftVoiceSelect.value;
           localStorage.setItem("acftVoice", acftVoice)
           addTts();
-        });        
+        });
+        
       }
     }
 
