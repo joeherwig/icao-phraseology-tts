@@ -172,7 +172,7 @@
 
 
       function getCharPhonetics (char) {
-        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","9":"niner","°":"degrees","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight"};
+        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight","9":"niner","°":"degrees"};
         let speak = natoAlphabet[char.toUpperCase()] ? natoAlphabet[char] : char;
         return speak + " ";
       }
@@ -183,7 +183,7 @@
       }
 
       function getOperatorPhonetics (operatorCode) {
-        const operators = {"AAL": "American","AEE": "Aegean","AFR": "Air France","ANA": "All Nippon","AUA": "Austrian","BAW": "Speedbird","BEL": "Beeline","BER": "Air Berlin","CFG": "Condor","CPA": "Cathay","CSN": " China Southern","DAL": "Delta","DLH": "Lufthansa","ETD": "Etihad","EWG": "Eurowings","EZY": "Easy","FSC": "Four Star","GAF": " German Air Force","IBE": "Iberia","ITY": "Itarrow","KLM": "K L M","LXP": "Lanes","MAF": "Missi","NAX": "Nor Shuttle","NJU": "ExecJet","OAL": "Olympic","QFA": "Quantas","QTR": "Qatari","RYR": "Ryanair","SAA": "Springbok","SWA": "Southwest","SWR": "Swiss","TAM": "T A M","TAP": "Air Portugal","THY": "Turkish","UAE": "Emirates","UAL": "United","VLG": "Vueling","VOI": "Volaris","WZZ": "Wizz Air"};
+        const operators = {"AAL": "American","AEE": "Aegean","AFR": "Air France","ANA": "All Nippon","AUA": "Austrian","BAW": "Speedbird","BEL": "Beeline","BER": "Air Berlin","CFG": "Condor","CPA": "Cathay","CSN": " China Southern","DAL": "Delta","DLH": "Lufthansa","ETD": "Etihad","EWG": "Eurowings","EZY": "Easy","FSC": "Four Star","GAF": " German Air Force","IBE": "Iberia","ITY": "Itarrow","KLM": "K L M","LXP": "Lanes","MAF": "Missi","NAX": "Nor Shuttle","NJU": "ExecJet","NJT": "ExecJet","OAL": "Olympic","QFA": "Quantas","QTR": "Qatari","RYR": "Ryanair","SAA": "Springbok","SWA": "Southwest","SWR": "Swiss","TAM": "T A M","TAP": "Air Portugal","THY": "Turkish","UAE": "Emirates","UAL": "United","VLG": "Vueling","VOI": "Volaris","WZZ": "Wizz Air"};
         let speak = operators[operatorCode.toUpperCase()] ? operators[operatorCode] : getAbbreviationPhonetics(operatorCode);
         return speak + " ";
       }
@@ -266,7 +266,7 @@
             case /^(([0-9]{3}.[0-9]{1,3}))$/.test(sanitizedWord): 
               // frequencies
               let frequency = word.split(".")[0];
-              let frequencydecimals = word.split(".")[1].replace(/[^a-z0-9\u00C0-\u017F]/gi, '').replace(/^(\d)|(\d)0+$/gm, '$1$2');
+              let frequencydecimals = word.split(".")[1].replace(/[^a-z0-9\u00C0-\u017F]/gi, '').replace(/^(0|\d*?[1-9])0+$/, '$1');
               transcription += getAbbreviationPhonetics(frequency) + "decimal " + getAbbreviationPhonetics(frequencydecimals);
               break;
             case /^(([FL].[0-9]{2,3}))$/.test(sanitizedWord): 
