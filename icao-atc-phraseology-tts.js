@@ -189,8 +189,8 @@
       }
 
       const getOperatorPhonetics = (designator) => {
-        const callsign = airlines.find(airl => airl.designator === designator.toUpperCase()).callsign;
-        let speak = callsign ? callsign : getAbbreviationPhonetics(designator);
+        const airline = airlines.find(airl => airl.designator === designator.toUpperCase());
+        let speak = airline ? airline.callsign.toLowerCase() : getAbbreviationPhonetics(designator);
         return speak + " ";
         
       };
