@@ -178,7 +178,7 @@
       getAirlines();
 
       function getCharPhonetics (char) {
-        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","9":"niner","°":"degrees","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight"};
+        const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight","9":"niner","°":"degrees"};
         let speak = natoAlphabet[char.toUpperCase()] ? natoAlphabet[char] : char;
         return speak + " ";
       }
@@ -273,7 +273,9 @@
             case /^(([0-9]{3}.[0-9]{1,3}))$/.test(sanitizedWord): 
               // frequencies
               let frequency = word.split(".")[0];
-              let frequencydecimals = word.split(".")[1].replace(/[^a-z0-9\u00C0-\u017F]/gi, '').replace(/^(\d)|(\d)0+$/gm, '$1$2');
+              let frequencydecimals = word.split(".")[1]
+                .replace(/[^a-z0-9\u00C0-\u017F]/gi, '')
+                .replace(/0+$/, '');
               transcription += getAbbreviationPhonetics(frequency) + "decimal " + getAbbreviationPhonetics(frequencydecimals);
               break;
             case /^(([FL].[0-9]{2,3}))$/.test(sanitizedWord): 
