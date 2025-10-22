@@ -241,7 +241,7 @@
               break;
             case /^([1-9]{1}([0]{3}))$/.test(sanitizedWord):
               // thousands
-              transcription += left(sanitizedWord, 1) + getOperatorPhonetics("thousand") + " ";
+              transcription += sanitizedWord.substring(0, 1) + " tausand ";
               break;
             case /^([A-Za-z]{3,10})([0-9]{1}[A-Z]{1})$/.test(sanitizedWord): 
               // SID
