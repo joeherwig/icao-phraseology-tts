@@ -46,13 +46,10 @@
         width: 150px;
       }
       select, input {
-        background: inherit;
-        color: inherit;
         border: solid 1px #666666 
       }
 
       details[open] {
-        background: #eeeeee;
         padding: 0.5em;
       }
 
@@ -69,13 +66,10 @@
         width: 10ch;
       }
       @media (prefers-color-scheme: dark){
-        details[open] {
-          background: #222222;
+        details[open]> input {
+          filter: invert(1);
         }
         
-        option, input {
-          background: #222222;
-        }
       }
     </style>`
 
@@ -114,6 +108,7 @@
     constructor() {
       super();
       let voices = [];
+      let airlines = [];
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.appendChild(template.content.cloneNode(true));
       let ttsSettings = this.shadowRoot.querySelector("#ttsSettings");
@@ -131,6 +126,7 @@
       let acftVoice = localStorage.getItem("acftVoice") !== (null && '') ? localStorage.getItem("acftVoice") : 1;
       let callsign = localStorage.getItem("callsign") !== (null || '') ? localStorage.getItem("callsign") : "DLH22G";
       callsignSelect.value = callsign;
+
 
       
       function replaceCallsign () {
@@ -170,6 +166,16 @@
         }
       }
 
+      const getAirlines = async (designator) => {
+        const url = 'https://gist.githubusercontent.com/joeherwig/f3af89da607c9d3032feb443d0b889db/raw/aa758d6a660f9a99b27065fd83f8a4f1052a965b/icao-callsigns.json';
+        const response = await fetch(url);
+        return await response.json();
+      };
+
+      getAirlines().then(airlineList => {
+        airlines = airlineList;
+      });
+      getAirlines();
 
       function getCharPhonetics (char) {
         const natoAlphabet = {"A":"alpha", "B":"bravo","C":"charly","D":"delta","E":"echo","F":"foxtrott","G":"golf","H":"hotel","I":"india","J":"juliett","K":"kilo","L":"lima","M":"mike","N":"november","O":"oscar","P":"papa","Q":"quebeck","R":"romeo","S":"sierra","T":"tango","U":"uniform","V":"victor","W":"whiskey","X":"x-ray","Y":"yankee","Z":"zulu","0":"zero","1":"one","2":"two","9":"niner","°":"degrees","3":"trih","4":"four","5":"five","6":"siks","7":"seven","8":"eight"};
@@ -182,11 +188,12 @@
         return speak + " ";
       }
 
-      function getOperatorPhonetics (operatorCode) {
-        const operators = {"AAL": "American","AEE": "Aegean","AFR": "Air France","ANA": "All Nippon","AUA": "Austrian","BAW": "Speedbird","BEL": "Beeline","BER": "Air Berlin","CFG": "Condor","CPA": "Cathay","CSN": " China Southern","DAL": "Delta","DLH": "Lufthansa","ETD": "Etihad","EWG": "Eurowings","EZY": "Easy","FSC": "Four Star","GAF": " German Air Force","IBE": "Iberia","ITY": "Itarrow","KLM": "K L M","LXP": "Lanes","MAF": "Missi","NAX": "Nor Shuttle","NJU": "ExecJet","OAL": "Olympic","QFA": "Quantas","QTR": "Qatari","RYR": "Ryanair","SAA": "Springbok","SWA": "Southwest","SWR": "Swiss","TAM": "T A M","TAP": "Air Portugal","THY": "Turkish","UAE": "Emirates","UAL": "United","VLG": "Vueling","VOI": "Volaris","WZZ": "Wizz Air"};
-        let speak = operators[operatorCode.toUpperCase()] ? operators[operatorCode] : getAbbreviationPhonetics(operatorCode);
+      const getOperatorPhonetics = (designator) => {
+        const callsign = airlines.find(airl => airl.designator === designator.toUpperCase()).callsign;
+        let speak = callsign ? callsign : getAbbreviationPhonetics(designator);
         return speak + " ";
-      }
+        
+      };
 
       function getAbbreviationPhonetics(word) {
         let seperateChars = word.split("");
