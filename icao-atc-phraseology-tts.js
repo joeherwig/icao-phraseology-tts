@@ -231,7 +231,7 @@
               // Taxi routes 
               transcription += "holding point ";
               break;
-            case /^(deicing||de-icing)$/.test(sanitizedWord):
+            case /^(deicing|de-icing)$/.test(sanitizedWord):
               // Taxi routes 
               transcription += " dee icing ";
               break;
